@@ -7,7 +7,7 @@ jobs:
   assign-label:
     runs-on: ubuntu-latest
     steps:
-      - name: Assign label
+      - name: Assign label # for line (12): the value 'issue_title' param will be reached out in command, so it can be overridden!!! see issues at github repo
         run: |
           issue_title="${{ github.event.issue.title }}"
           if [[ "$issue_title" == *"bug"* ]]; then
