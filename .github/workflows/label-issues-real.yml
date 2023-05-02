@@ -6,13 +6,19 @@ on:
 jobs:
   assign-label:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write # adds the write permission for this job only, all other permission are not granted!!! see: https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs
+    env:
+      REPO: ${{ github.repository }}
+      ISSUE_NUMBER: ${{ github.event.issue.number }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - name: Assign label
+      - name: Assign label # listen at the title param on issue event and uses the github api and adds a label 'bug' to the issue
         if: contains(github.event.issue.title, 'bug')
         run: |
           curl -X POST \
-          --url https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/labels \
-          -H 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+          --url https://api.github.com/repos/$REPO/issues/$ISSUE_NUMBER/labels \
+          -H 'authorization: Bearer $GITHUB_TOKEN' \
           -H 'content-type: application/json' \
           -d '{
               "labels": ["bug"]
